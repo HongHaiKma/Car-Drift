@@ -50,7 +50,6 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < carPool.Count; i++)
         {
-
             carControllerPool[i].SetActiveGO(false);
         }
     }

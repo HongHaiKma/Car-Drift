@@ -161,7 +161,7 @@ MonoBehaviour:
   turnAngle: 0
   turnSpeed: 150
   driftSpeed: 0
-  speed: 50
+  speed: 160
   sideSlipAmount: 0
   turn: 0
   drift: 0

@@ -29,20 +29,23 @@ public class CarController : MonoBehaviour
 
     void OnEnable()
     {
-        turnAngle = 0f;
-        turnSpeed = 300f;
-        speed = 50f;
-        driftSpeed = 120f;
-        turn = false;
-        drift = false;
-        tf.position = new Vector3(0f, 0.25f, 0f);
-        tf.rotation = Quaternion.Euler(0f, 0f, 0f);
+        SetupNewCarStatus();
     }
 
     public void Update()
     {
         // SetRotationPoint();
         // Rotation();
+
+        if(Input.GetKeyDown("a"))
+        {
+            turn = true;
+        }
+        else if(Input.GetKeyDown("d"))
+        {
+            turn = true;
+        }
+
         if(Input.GetKeyUp("a"))
         {
             speed = 0;
@@ -52,7 +55,6 @@ public class CarController : MonoBehaviour
 
             if(!GameManager.Instance.lose)
             {
-                Debug.Log(GameManager.Instance.lose);
                 StartCoroutine(CreateNewCar(false));
             }
         }
@@ -74,28 +76,7 @@ public class CarController : MonoBehaviour
 
     public void FixedUpdate()
     {
-
-        float speedLimit = rb.velocity.magnitude / 100;
-
-        if(drift)
-        {
-            if(!turn)
-            {
-                rb.velocity = new Vector3(0f, 0f, rb.velocity.z / 20);
-            }
-            
-            rb.AddRelativeForce(Vector3.forward * driftSpeed);
-            // rb.AddForce(Vector3.forward * speed);
-        }
-        else
-        {
-            rb.velocity = Vector3.forward * speed;
-        }
-
-        
-        // Debug.Log(rb.velocity.sqrMagnitude);
-        // Debug.Log(rb.velocity.magnitude);
-        // Debug.Log(rb.velocity);
+        Drift();
 
         // tf.rotation = Quaternion.Lerp(tf.rotation, targetRotation, turnSpeed * Mathf.Clamp(speedLimit, -1, 1) * Time.fixedDeltaTime);
         Rotation();
@@ -131,16 +112,14 @@ public class CarController : MonoBehaviour
         if(Input.GetKey("a"))
         {
             drift = true;
-            turn = true;
             turnAngle -= turnSpeed * Time.fixedDeltaTime;
-            tf.rotation = Quaternion.Euler(0, turnAngle, 0);
+            rb.rotation = Quaternion.Euler(0, turnAngle, 0);
         }
         else if(Input.GetKey("d"))
         {
             drift = true;
-            turn = true;
             turnAngle += turnSpeed * Time.fixedDeltaTime;
-            tf.rotation = Quaternion.Euler(0, turnAngle, 0);
+            rb.rotation = Quaternion.Euler(0, turnAngle, 0);
         } 
 
         // if(Input.GetMouseButton(0))
@@ -174,5 +153,36 @@ public class CarController : MonoBehaviour
     {
         gameObject.SetActive(status);
         tf.position = startPos;
+    }
+
+    public void SetupNewCarStatus()
+    {
+        turnAngle = 0f;
+        turnSpeed = 350f;
+        speed = 60f;
+        driftSpeed = 120f;
+        turn = false;
+        drift = false;
+        tf.position = new Vector3(0f, 0.25f, 0f);
+        tf.rotation = Quaternion.Euler(0f, 0f, 0f);
+    }
+
+    public void Drift()
+    {
+        if(drift)
+        {
+            // if(turn)
+            // {
+            //     rb.velocity = new Vector3(0f, 0f, rb.velocity.z / 1f);
+            //     turn = false;
+            // }
+            // // rb.velocity = new Vector3(rb.rotation.x, 0f, rb.rotation.z) * speed;
+            rb.AddRelativeForce(Vector3.forward * driftSpeed);
+            rb.AddRelativeForce(Vector3.left * driftSpeed);
+        }
+        else
+        {
+            rb.velocity = Vector3.forward * speed;
+        }
     }
 }
