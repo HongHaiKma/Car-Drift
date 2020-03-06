@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    private static GameManager instance;
-    public static GameManager Instance
-    { get { if (instance == null) instance = GameObject.FindObjectOfType<GameManager>(); return instance; } }
-
     public List<GameObject> carPool;
     public List<CarController> carControllerPool;
     public GameObject car;
