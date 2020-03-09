@@ -14,7 +14,18 @@ public class GameManager : Singleton<GameManager>
     {
         CreateCarPool();
 
-        ActiveCar();
+        ActiveNewCar();
+    }
+
+    void OnEnable()
+    {
+        EventManager.StartListening(GameEvent.GameContinue, Lose);
+        EventManager.StartListening(GameEvent.ActiveNewCar, ActiveNewCar);
+    }
+
+    public void Lose()
+    {
+        lose = false;
     }
 
     public void CreateCarPool()
@@ -27,7 +38,7 @@ public class GameManager : Singleton<GameManager>
         }
     }
 
-    public void ActiveCar()
+    public void ActiveNewCar()
     {
         lose = true;
         for (int i = 0; i < carPool.Count; i++)
@@ -54,6 +65,6 @@ public class GameManager : Singleton<GameManager>
     {
         lose = false;
         DeactiveCar();
-        ActiveCar();
+        ActiveNewCar();
     }
 }

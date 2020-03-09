@@ -6,7 +6,6 @@ public class CarCollision : MonoBehaviour
 {
     void OnTriggerEnter(Collider other)
     {
-        Debug.Log("Car crash");
-        GameManager.Instance.lose = false;
+        EventManager.TriggerEvent(GameEvent.GameContinue);
     }
 }

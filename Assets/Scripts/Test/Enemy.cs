@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Test2 : MonoBehaviour
+public class Enemy : MonoBehaviour
 {
     // Collider col;
 
@@ -14,14 +14,23 @@ public class Test2 : MonoBehaviour
     //     Debug.Log(col.bounds.min);
     // }
 
+    private bool die;
+
+    private void Awake()
+    {
+        die = false;    
+    }
+
     void OnEnable()
     {
-        EventManager.StartListening("test", SubscribedAction);
+        // EventManager.StartListening("test", SubscribedAction);
+        EventManager.StartListening("CheckDie", CheckDie);
     }
     
     void OnDisable()
     {
-        EventManager.StopListening("test", SubscribedAction);
+        // EventManager.StopListening("test", SubscribedAction);
+        EventManager.StopListening("CheckDie", CheckDie);
     }
 
     void SubscribedAction()
@@ -29,15 +38,8 @@ public class Test2 : MonoBehaviour
         Debug.Log("Alloooooooo");
     }
 
-    void Update()
+    void CheckDie()
     {
-        // Debug.Log(col.bounds.max);
-        // Debug.Log(col.bounds.min);
-        // Debug.Log("aaaa");
 
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            EventManager.TriggerEvent("test");
-        }
     }
 }

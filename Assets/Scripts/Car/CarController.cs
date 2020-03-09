@@ -76,10 +76,11 @@ public class CarController : MonoBehaviour
 
     public void FixedUpdate()
     {
+        Rotate();
         Drift();
 
         // tf.rotation = Quaternion.Lerp(tf.rotation, targetRotation, turnSpeed * Mathf.Clamp(speedLimit, -1, 1) * Time.fixedDeltaTime);
-        Rotation();
+        // Rotation();
     }
 
     public void SetSideSlip()
@@ -107,7 +108,7 @@ public class CarController : MonoBehaviour
         }
     }
 
-    public void Rotation()
+    public void Rotate()
     {
         if(Input.GetKey("a"))
         {
@@ -139,7 +140,7 @@ public class CarController : MonoBehaviour
 
     public IEnumerator CreateNewCar(bool status)
     {
-        GameManager.Instance.ActiveCar();
+        EventManager.TriggerEvent(GameEvent.ActiveNewCar);
         yield return new WaitForSeconds(0.2f);
         SetActiveGO(false);
     }
@@ -171,14 +172,16 @@ public class CarController : MonoBehaviour
     {
         if(drift)
         {
-            // if(turn)
-            // {
-            //     rb.velocity = new Vector3(0f, 0f, rb.velocity.z / 1f);
-            //     turn = false;
-            // }
-            // // rb.velocity = new Vector3(rb.rotation.x, 0f, rb.rotation.z) * speed;
             rb.AddRelativeForce(Vector3.forward * driftSpeed);
-            rb.AddRelativeForce(Vector3.left * driftSpeed);
+            if(Input.GetKey("a"))
+            {
+                rb.AddRelativeForce(Vector3.left * driftSpeed);
+            }
+            else if(Input.GetKey("d"))
+            {
+                rb.AddRelativeForce(Vector3.right * driftSpeed);
+            } 
+            
         }
         else
         {
