@@ -17,13 +17,30 @@ public class GameManager : Singleton<GameManager>
         ActiveNewCar();
     }
 
-    void OnEnable()
+    private void Update()
     {
-        EventManager.StartListening(GameEvent.GameContinue, Lose);
-        EventManager.StartListening(GameEvent.ActiveNewCar, ActiveNewCar);
+        if (Input.touchCount > 0)
+        {
+            Touch touch = Input.GetTouch(0);
+
+            // Handle finger movements based on TouchPhase
+            switch (touch.phase)
+            {
+                case TouchPhase.Began:
+                    Debug.Log("Touch began!!!");
+                    break;
+
+                case TouchPhase.Moved:
+                    break;
+
+                case TouchPhase.Ended:
+                    Debug.Log("Touch ended!!!");
+                    break;
+            }
+        }
     }
 
-    public void Lose()
+    public void Continue()
     {
         lose = false;
     }
@@ -43,7 +60,7 @@ public class GameManager : Singleton<GameManager>
         lose = true;
         for (int i = 0; i < carPool.Count; i++)
         {
-            if(!carPool[i].gameObject.activeInHierarchy)
+            if (!carPool[i].gameObject.activeInHierarchy)
             {
                 carControllerPool[i].SetActiveGO(true);
                 TopDownCamera.Instance.curCarTf = carControllerPool[i].tf;

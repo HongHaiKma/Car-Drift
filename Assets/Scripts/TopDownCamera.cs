@@ -24,7 +24,7 @@ public class TopDownCamera : MonoBehaviour
 
     void Update()
     {
-        if(curCarTf == null)
+        if (curCarTf == null)
         {
             Debug.Log("null");
             return;

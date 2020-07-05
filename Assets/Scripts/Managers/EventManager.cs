@@ -2,7 +2,7 @@
 using UnityEngine.Events;
 using System.Collections;
 using System.Collections.Generic;
- 
+
 public class EventManager : Singleton<EventManager>
 {
     private Dictionary<string, UnityEvent> evtDict;

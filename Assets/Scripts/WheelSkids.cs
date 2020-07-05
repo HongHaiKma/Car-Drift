@@ -23,12 +23,12 @@ public class WheelSkids : MonoBehaviour
     {
         float intensity = playerCar.sideSlipAmount;
 
-        if(intensity < 0)
+        if (intensity < 0)
         {
             intensity = -intensity;
         }
-        
-        if(intensity > 0.1f)
+
+        if (intensity > 0.1f)
         {
             lastSkidId = skidController.AddSkidMark(tf.position, tf.up, intensity * this.intensity, lastSkidId);
         }
