@@ -7,7 +7,7 @@ public class WheelSkids : MonoBehaviour
     public float intensity = 1.5f;
 
     Skidmarks skidController;
-    public CarController playerCar;
+    public CarMotion playerCar;
     int lastSkidId = -1;
 
     public Transform tf;

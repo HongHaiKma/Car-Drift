@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intensity: 20
-  playerCar: {fileID: -4323169437412791219}
+  playerCar: {fileID: 163665115364754727}
   tf: {fileID: 0}
 --- !u!1 &122791389075536065
 GameObject:
@@ -108,6 +108,7 @@ GameObject:
   - component: {fileID: 136531197700911701}
   - component: {fileID: 95815335928887419}
   - component: {fileID: -4323169437412791219}
+  - component: {fileID: 163665115364754727}
   - component: {fileID: -2737860289413725765}
   - component: {fileID: -8633358810184036363}
   - component: {fileID: -4919217956708192858}
@@ -211,6 +212,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   tf: {fileID: 0}
   rb: {fileID: 0}
+  carMotion: {fileID: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
   turnAngle: 0
   turnSpeed: 150
@@ -219,6 +221,27 @@ MonoBehaviour:
   speed: 160
   sideSlipAmount: 0
   drift: 0
+--- !u!114 &163665115364754727
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 122791389075536065}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7411f917167afc84781bad93ffaa79b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  tf: {fileID: 0}
+  rb: {fileID: 0}
+  drift: 0
+  turnAngle: 0
+  turnSpeed: 0
+  turnDriftSpeed: 0
+  forwardDriftSpeed: 0
+  speed: 0
+  sideSlipAmount: 0
 --- !u!114 &-2737860289413725765
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -353,7 +376,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intensity: 20
-  playerCar: {fileID: -4323169437412791219}
+  playerCar: {fileID: 163665115364754727}
   tf: {fileID: 0}
 --- !u!1 &123206355074908215
 GameObject:
@@ -448,7 +471,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intensity: 20
-  playerCar: {fileID: -4323169437412791219}
+  playerCar: {fileID: 163665115364754727}
   tf: {fileID: 0}
 --- !u!1 &123255604314067747
 GameObject:
@@ -543,5 +566,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   intensity: 20
-  playerCar: {fileID: -4323169437412791219}
+  playerCar: {fileID: 163665115364754727}
   tf: {fileID: 0}

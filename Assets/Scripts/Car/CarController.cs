@@ -4,21 +4,9 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    public Transform tf;
-    public Rigidbody rb;
-
+    [Header("Components")]
+    public CarMotion carMotion;
     public Quaternion targetRotation;
-    // public float turnSpeed = 5f;
-    public float turnAngle;
-    public float turnSpeed;
-    public float turnDriftSpeed;
-    public float forwardDriftSpeed;
-    public float speed;
-
-    Vector3 lastPosition;
-    public float sideSlipAmount;
-
-    public bool drift = false;
 
     void Awake()
     {
@@ -27,104 +15,74 @@ public class CarController : MonoBehaviour
 
     public void CacheComponents()
     {
-        tf = GetComponent<Transform>();
-        rb = GetComponent<Rigidbody>();
-    }
-
-    void OnEnable()
-    {
-        SetupNewCarStatus();
+        carMotion = GetComponent<CarMotion>();
     }
 
     public void Update()
     {
         if (Input.GetKeyUp("a"))
         {
-            speed = 0;
-            turnDriftSpeed = 0;
-            forwardDriftSpeed = 0f;
-            turnSpeed = 0;
-            rb.velocity = new Vector3(0f, 0f, 0f);
+            carMotion.StopCarMotion();
 
-            if (!GameManager.Instance.lose)
+            if (!GameManager.Instance.gameEnd)
             {
-                StartCoroutine(CreateNewCar(false));
+                StartCoroutine(CreateNewCar());
             }
         }
         else if (Input.GetKeyUp("d"))
         {
-            speed = 0;
-            turnDriftSpeed = 0;
-            forwardDriftSpeed = 0f;
-            turnSpeed = 0;
-            rb.velocity = new Vector3(0f, 0f, 0f);
+            carMotion.StopCarMotion();
 
-            if (!GameManager.Instance.lose)
+            if (!GameManager.Instance.gameEnd)
             {
-                StartCoroutine(CreateNewCar(false));
+                StartCoroutine(CreateNewCar());
             }
         }
 
-        SetSideSlip();
+        carMotion.SetSideSlip();
     }
 
     public void FixedUpdate()
     {
         Rotate();
         Drift();
-
-        // tf.rotation = Quaternion.Lerp(tf.rotation, targetRotation, turnSpeed * Mathf.Clamp(speedLimit, -1, 1) * Time.fixedDeltaTime);
-        // Rotation();
-    }
-
-    public void SetSideSlip()
-    {
-        Vector3 direction = tf.position - lastPosition;
-        Vector3 movement = tf.InverseTransformDirection(direction);
-        lastPosition = tf.position;
-
-        sideSlipAmount = movement.x;
-    }
-
-    public void SetRotationPoint()
-    {
-        Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, Vector3.zero);
-        float distance;
-
-        if (plane.Raycast(ray, out distance))
-        {
-            Vector3 target = ray.GetPoint(distance);
-            Vector3 direction = target - tf.position;
-
-            float rotationAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-            targetRotation = Quaternion.Euler(0, rotationAngle, 0);
-        }
     }
 
     public void Rotate()
     {
         if (Input.GetKey("a"))
         {
-            Debug.Log("Turn left");
-            drift = true;
-            turnAngle -= turnSpeed * Time.fixedDeltaTime;
-            rb.rotation = Quaternion.Euler(0, turnAngle, 0);
+            carMotion.RotateLeft();
         }
         else if (Input.GetKey("d"))
         {
-            Debug.Log("Turn left");
-            drift = true;
-            turnAngle += turnSpeed * Time.fixedDeltaTime;
-            rb.rotation = Quaternion.Euler(0, turnAngle, 0);
+            carMotion.RotateRight();
         }
     }
 
-    public IEnumerator CreateNewCar(bool status)
+    public void Drift()
     {
-        // EventManager.TriggerEvent(GameEvent.ActiveNewCar);
-        GameManager.Instance.ActiveNewCar();
-        yield return new WaitForSeconds(1.5f);
+        if (carMotion.drift)
+        {
+            if (Input.GetKey("a"))
+            {
+                carMotion.DriftLeft();
+            }
+            else if (Input.GetKey("d"))
+            {
+                carMotion.DriftRight();
+            }
+        }
+        else
+        {
+            carMotion.KeepMovingForward();
+        }
+    }
+
+    public IEnumerator CreateNewCar()
+    {
+        yield return new WaitForSeconds(1f);
+        PoolManager.Instance.ActiveNewCar();
         SetActiveGO(false);
     }
 
@@ -133,45 +91,24 @@ public class CarController : MonoBehaviour
         gameObject.SetActive(status);
     }
 
-    public void SetActiveGO(bool status, Vector3 startPos)
+    public bool IsActive()
     {
-        gameObject.SetActive(status);
-        tf.position = startPos;
+        return gameObject.activeInHierarchy;
     }
 
-    public void SetupNewCarStatus()
-    {
-        turnAngle = 0f;
-        turnSpeed = 300f;
+    // public void SetRotationPoint()
+    // {
+    //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+    //     Plane plane = new Plane(Vector3.up, Vector3.zero);
+    //     float distance;
 
-        speed = 70f;
-        turnDriftSpeed = 90f;
-        forwardDriftSpeed = 120f;
+    //     if (plane.Raycast(ray, out distance))
+    //     {
+    //         Vector3 target = ray.GetPoint(distance);
+    //         Vector3 direction = target - tf.position;
 
-        drift = false;
-
-        tf.position = new Vector3(0f, 0f, 0f);
-        tf.rotation = Quaternion.Euler(0f, 0f, 0f);
-    }
-
-    public void Drift()
-    {
-        if (drift)
-        {
-            rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
-
-            if (Input.GetKey("a"))
-            {
-                rb.AddRelativeForce(Vector3.left * turnDriftSpeed);
-            }
-            else if (Input.GetKey("d"))
-            {
-                rb.AddRelativeForce(Vector3.right * turnDriftSpeed);
-            }
-        }
-        else
-        {
-            rb.velocity = Vector3.forward * speed;
-        }
-    }
+    //         float rotationAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
+    //         targetRotation = Quaternion.Euler(0, rotationAngle, 0);
+    //     }
+    // }
 }
