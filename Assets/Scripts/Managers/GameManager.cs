@@ -8,7 +8,7 @@ public class GameManager : Singleton<GameManager>
     public List<CarController> carControllerPool;
     public GameObject car;
 
-    public bool gameEnd = false;
+    public bool gameStart = false;
 
     private void Update()
     {
@@ -34,6 +34,6 @@ public class GameManager : Singleton<GameManager>
 
     public void Continue()
     {
-        gameEnd = false;
+        gameStart = true;
     }
 }

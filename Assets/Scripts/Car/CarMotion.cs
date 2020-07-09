@@ -10,7 +10,10 @@ public class CarMotion : MonoBehaviour
     public CarController carController;
 
     [Header("Drift parameter")]
-    public bool drift = false;
+    public CarState carState;
+    public bool driftLeft;
+    public bool drifting = false;
+
     public float turnAngle;
     public float turnSpeed;
     public float turnDriftSpeed;
@@ -56,30 +59,38 @@ public class CarMotion : MonoBehaviour
         CarEvent.Instance.OnDrift -= OnDrift;
     }
 
-    public void RotateLeft()
+    public void Drift()
     {
-        drift = true;
-        turnAngle -= turnSpeed * Time.fixedDeltaTime;
-        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
-    }
-
-    public void RotateRight()
-    {
-        drift = true;
-        turnAngle += turnSpeed * Time.fixedDeltaTime;
-        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
+        if (driftLeft)
+        {
+            DriftLeft();
+        }
+        else
+        {
+            DriftRight();
+        }
     }
 
     public void DriftLeft()
     {
+        drifting = true;
+
         rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
         rb.AddRelativeForce(Vector3.left * turnDriftSpeed);
+
+        turnAngle -= turnSpeed * Time.fixedDeltaTime;
+        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
     }
 
     public void DriftRight()
     {
+        drifting = true;
+
         rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
         rb.AddRelativeForce(Vector3.right * turnDriftSpeed);
+
+        turnAngle += turnSpeed * Time.fixedDeltaTime;
+        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
     }
 
     public void KeepMovingForward()
@@ -116,14 +127,15 @@ public class CarMotion : MonoBehaviour
 
     public void SetupNewCarStatus()
     {
+        carState = CarState.MoveForward;
+        drifting = false;
+
         turnAngle = 0f;
         turnSpeed = 300f;
 
         speed = 70f;
         turnDriftSpeed = 90f;
         forwardDriftSpeed = 120f;
-
-        drift = false;
 
         tf.position = new Vector3(0f, 0f, 0f);
         tf.rotation = Quaternion.Euler(0f, 0f, 0f);

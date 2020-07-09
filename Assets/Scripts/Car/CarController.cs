@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum CarState { MoveForward, Drifting, StopDrifting };
+
 public class CarController : MonoBehaviour
 {
     [Header("Components")]
@@ -24,7 +26,7 @@ public class CarController : MonoBehaviour
         {
             carMotion.StopCarMotion();
 
-            if (!GameManager.Instance.gameEnd)
+            if (GameManager.Instance.gameStart)
             {
                 StartCoroutine(CreateNewCar());
             }
@@ -33,7 +35,7 @@ public class CarController : MonoBehaviour
         {
             carMotion.StopCarMotion();
 
-            if (!GameManager.Instance.gameEnd)
+            if (GameManager.Instance.gameStart)
             {
                 StartCoroutine(CreateNewCar());
             }
@@ -44,44 +46,48 @@ public class CarController : MonoBehaviour
 
     public void FixedUpdate()
     {
-        Rotate();
         Drift();
-    }
-
-    public void Rotate()
-    {
-        if (Input.GetKey("a"))
-        {
-            carMotion.RotateLeft();
-        }
-        else if (Input.GetKey("d"))
-        {
-            carMotion.RotateRight();
-        }
     }
 
     public void Drift()
     {
-        if (carMotion.drift)
+        // // if (carMotion.drifting)
+        // // {
+        // if (Input.GetKey("a"))
+        // {
+        //     carMotion.DriftLeft();
+        // }
+        // else if (Input.GetKey("d"))
+        // {
+        //     carMotion.DriftRight();
+        // }
+        // // }
+        // else
+        // {
+        //     carMotion.KeepMovingForward();
+        // }
+        switch (carMotion.carState)
         {
-            if (Input.GetKey("a"))
-            {
-                carMotion.DriftLeft();
-            }
-            else if (Input.GetKey("d"))
-            {
-                carMotion.DriftRight();
-            }
-        }
-        else
-        {
-            carMotion.KeepMovingForward();
+            case CarState.MoveForward:
+                carMotion.KeepMovingForward();
+                break;
+            case CarState.Drifting:
+                Drift();
+                break;
+            case CarState.StopDrifting:
+                carMotion.StopCarMotion();
+                if (GameManager.Instance.gameStart)
+                {
+                    StartCoroutine(CreateNewCar());
+                }
+                break;
         }
     }
 
     public IEnumerator CreateNewCar()
     {
         yield return new WaitForSeconds(1f);
+        UIManager.Instance.btn_Drift.interactable = true;
         PoolManager.Instance.ActiveNewCar();
         SetActiveGO(false);
     }

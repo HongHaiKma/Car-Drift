@@ -28,7 +28,7 @@ public class PoolManager : Singleton<PoolManager>
 
     public void ActiveNewCar()
     {
-        GameManager.Instance.gameEnd = true;
+        GameManager.Instance.gameStart = true;
 
         for (int i = 0; i < carControllerPool.Count; i++)
         {
@@ -52,7 +52,7 @@ public class PoolManager : Singleton<PoolManager>
 
     public void ResetGame()
     {
-        GameManager.Instance.gameEnd = false;
+        GameManager.Instance.gameStart = true;
         DeactiveCar();
         ActiveNewCar();
     }
