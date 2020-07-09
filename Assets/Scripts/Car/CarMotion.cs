@@ -24,6 +24,10 @@ public class CarMotion : MonoBehaviour
     Vector3 lastPosition;
     public float sideSlipAmount;
 
+    // [Header("State")]
+    // public StateMachine stateMachine;
+    // public CarStateInstance carStateInstance;
+
     void Awake()
     {
         CacheComponents();
@@ -38,72 +42,18 @@ public class CarMotion : MonoBehaviour
 
     void OnEnable()
     {
-        SetupNewCarStatus();
-        StartListenToEvent();
-
-        CarEvent.Instance.Drift();
+        // SetupNewCarStatus();
+        // StartListenToEvent();
     }
 
     void OnDisable()
     {
-        StopListenToEvent();
+        // StopListenToEvent();
     }
 
-    public void StartListenToEvent()
-    {
-        CarEvent.Instance.OnDrift += OnDrift;
-    }
-
-    public void StopListenToEvent()
-    {
-        CarEvent.Instance.OnDrift -= OnDrift;
-    }
-
-    public void Drift()
-    {
-        if (driftLeft)
-        {
-            DriftLeft();
-        }
-        else
-        {
-            DriftRight();
-        }
-    }
-
-    public void DriftLeft()
-    {
-        drifting = true;
-
-        rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
-        rb.AddRelativeForce(Vector3.left * turnDriftSpeed);
-
-        turnAngle -= turnSpeed * Time.fixedDeltaTime;
-        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
-    }
-
-    public void DriftRight()
-    {
-        drifting = true;
-
-        rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
-        rb.AddRelativeForce(Vector3.right * turnDriftSpeed);
-
-        turnAngle += turnSpeed * Time.fixedDeltaTime;
-        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
-    }
-
-    public void KeepMovingForward()
+    public void MoveForward()
     {
         rb.velocity = Vector3.forward * speed;
-    }
-
-    public void OnDrift()
-    {
-        if (carController.IsActive())
-        {
-            Debug.Log("OnDrift!!!");
-        }
     }
 
     public void SetSideSlip()
@@ -115,19 +65,8 @@ public class CarMotion : MonoBehaviour
         sideSlipAmount = movement.x;
     }
 
-    public float CalDistance(Vector2 origin, Vector2 des)
-    {
-        return Vector2.Distance(origin, des);
-    }
-
-    public float CalDistance(Vector3 origin, Vector3 des)
-    {
-        return Vector3.Distance(origin, des);
-    }
-
     public void SetupNewCarStatus()
     {
-        carState = CarState.MoveForward;
         drifting = false;
 
         turnAngle = 0f;
@@ -141,12 +80,101 @@ public class CarMotion : MonoBehaviour
         tf.rotation = Quaternion.Euler(0f, 0f, 0f);
     }
 
-    public void StopCarMotion()
+    public void StopMotion()
     {
         speed = 0;
         turnDriftSpeed = 0;
         forwardDriftSpeed = 0f;
         turnSpeed = 0;
         rb.velocity = new Vector3(0f, 0f, 0f);
+    }
+
+    public bool IsActive()
+    {
+        return gameObject.activeInHierarchy;
+    }
+
+    //-------------------------------------STATES-------------------------------------------
+    public void OnDriftEnter()
+    {
+        carState = CarState.Drifting;
+
+        driftLeft = PoolManager.Instance.PickNearestTarget(tf.position);
+
+        //Choose drift direction
+    }
+
+    public void OnDriftExecute()
+    {
+        if (driftLeft)
+        {
+            DriftLeft();
+        }
+        else
+        {
+            DriftRight();
+        }
+    }
+
+    public void OnDriftExit()
+    {
+
+    }
+
+    public void DriftLeft()
+    {
+        drifting = true;
+
+        rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
+        rb.AddRelativeForce(Vector3.left * turnDriftSpeed);
+
+        turnAngle -= turnSpeed * Time.fixedDeltaTime;
+        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
+
+        SetSideSlip();
+    }
+
+    public void DriftRight()
+    {
+        drifting = true;
+
+        rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
+        rb.AddRelativeForce(Vector3.right * turnDriftSpeed);
+
+        turnAngle += turnSpeed * Time.fixedDeltaTime;
+        rb.rotation = Quaternion.Euler(0, turnAngle, 0);
+
+        SetSideSlip();
+    }
+
+    public void OnMoveForwardEnter()
+    {
+        carState = CarState.MoveForward;
+    }
+
+    public void OnMoveForwardExecute()
+    {
+        MoveForward();
+    }
+
+    public void OnMoveForwardExit()
+    {
+
+    }
+
+    public void OnStopDriftEnter()
+    {
+        carState = CarState.StopDrifting;
+        StopMotion();
+    }
+
+    public void OnStopDriftExecute()
+    {
+
+    }
+
+    public void OnStopDriftExit()
+    {
+
     }
 }

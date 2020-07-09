@@ -10,9 +10,14 @@ public class CarController : MonoBehaviour
     public CarMotion carMotion;
     public Quaternion targetRotation;
 
+    [Header("State")]
+    public StateMachine stateMachine;
+    public CarStateInstance carStateInstance;
+
     void Awake()
     {
         CacheComponents();
+        InitStateMachine();
     }
 
     public void CacheComponents()
@@ -20,76 +25,92 @@ public class CarController : MonoBehaviour
         carMotion = GetComponent<CarMotion>();
     }
 
+    void OnEnable()
+    {
+        carMotion.SetupNewCarStatus();
+        StartListenToEvent();
+        stateMachine.ChangeState(carStateInstance.moveForward);
+    }
+
+    void OnDisable()
+    {
+        StartListenToEvent();
+    }
+
+    public void InitStateMachine()
+    {
+        carStateInstance = new CarStateInstance();
+        stateMachine = new StateMachine(this.carMotion);
+        stateMachine.Init(carStateInstance.stopDriftState);
+        // stateMachine.Init(carStateInstance.moveForward);
+    }
+
+    public void StartListenToEvent()
+    {
+        CarEvent.Instance.OnDrift += OnDrift;
+        CarEvent.Instance.OnStopDrift += OnStopDrift;
+        CarEvent.Instance.OnMoveForward += OnMoveForward;
+        CarEvent.Instance.OnSpawnNewCar += OnSpawnNewCar;
+    }
+
+    public void StopListenToEvent()
+    {
+        CarEvent.Instance.OnDrift -= OnDrift;
+        CarEvent.Instance.OnStopDrift -= OnStopDrift;
+        CarEvent.Instance.OnMoveForward -= OnMoveForward;
+        CarEvent.Instance.OnSpawnNewCar -= OnSpawnNewCar;
+    }
+
     public void Update()
     {
-        if (Input.GetKeyUp("a"))
-        {
-            carMotion.StopCarMotion();
+        // if (Input.GetKeyUp("a"))
+        // {
+        //     carMotion.StopMotion();
 
-            if (GameManager.Instance.gameStart)
-            {
-                StartCoroutine(CreateNewCar());
-            }
-        }
-        else if (Input.GetKeyUp("d"))
-        {
-            carMotion.StopCarMotion();
+        //     if (GameManager.Instance.gameStart)
+        //     {
+        //         StartCoroutine(CreateNewCar());
+        //     }
+        // }
+        // else if (Input.GetKeyUp("d"))
+        // {
+        //     carMotion.StopMotion();
 
-            if (GameManager.Instance.gameStart)
-            {
-                StartCoroutine(CreateNewCar());
-            }
-        }
+        //     if (GameManager.Instance.gameStart)
+        //     {
+        //         StartCoroutine(CreateNewCar());
+        //     }
+        // }
 
-        carMotion.SetSideSlip();
+        // carMotion.SetSideSlip();
+
+
     }
 
     public void FixedUpdate()
     {
-        Drift();
+        stateMachine.ExecuteStateUpdate();
     }
 
     public void Drift()
     {
-        // // if (carMotion.drifting)
-        // // {
-        // if (Input.GetKey("a"))
-        // {
-        //     carMotion.DriftLeft();
-        // }
-        // else if (Input.GetKey("d"))
-        // {
-        //     carMotion.DriftRight();
-        // }
-        // // }
-        // else
-        // {
-        //     carMotion.KeepMovingForward();
-        // }
-        switch (carMotion.carState)
-        {
-            case CarState.MoveForward:
-                carMotion.KeepMovingForward();
-                break;
-            case CarState.Drifting:
-                Drift();
-                break;
-            case CarState.StopDrifting:
-                carMotion.StopCarMotion();
-                if (GameManager.Instance.gameStart)
-                {
-                    StartCoroutine(CreateNewCar());
-                }
-                break;
-        }
+
     }
 
-    public IEnumerator CreateNewCar()
+    public void OnSpawnNewCar()
     {
-        yield return new WaitForSeconds(1f);
+        // StartCoroutine(IESpawnNewCar());
+        Invoke("IESpawnNewCar", 1f);
+    }
+
+    public void IESpawnNewCar()
+    {
+        // PoolManager.Instance.ActiveNewCar();
+        // yield return new WaitForSeconds(1f);
         UIManager.Instance.btn_Drift.interactable = true;
         PoolManager.Instance.ActiveNewCar();
-        SetActiveGO(false);
+        // SetActiveGO(false);
+        Debug.Log("IE spwan a new car called!!!");
     }
 
     public void SetActiveGO(bool status)
@@ -117,4 +138,22 @@ public class CarController : MonoBehaviour
     //         targetRotation = Quaternion.Euler(0, rotationAngle, 0);
     //     }
     // }
+
+    //-------------------------------------EVENTS-------------------------------------------
+
+    public void OnDrift()
+    {
+        stateMachine.ChangeState(carStateInstance.driftState);
+
+    }
+
+    public void OnStopDrift()
+    {
+        stateMachine.ChangeState(carStateInstance.stopDriftState);
+    }
+
+    public void OnMoveForward()
+    {
+        stateMachine.ChangeState(carStateInstance.moveForward);
+    }
 }

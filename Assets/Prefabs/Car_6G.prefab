@@ -210,17 +210,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 64552400633947d47af2906ed9ea6884, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tf: {fileID: 0}
-  rb: {fileID: 0}
   carMotion: {fileID: 0}
   targetRotation: {x: 0, y: 0, z: 0, w: 0}
-  turnAngle: 0
-  turnSpeed: 150
-  turnDriftSpeed: 0
-  forwardDriftSpeed: 0
-  speed: 160
-  sideSlipAmount: 0
-  drift: 0
 --- !u!114 &163665115364754727
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -233,9 +224,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7411f917167afc84781bad93ffaa79b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  tf: {fileID: 0}
-  rb: {fileID: 0}
-  drift: 0
+  tf: {fileID: 117529259155223543}
+  rb: {fileID: -8633358810184036363}
+  carController: {fileID: 0}
+  carState: 0
+  driftLeft: 0
+  drifting: 0
   turnAngle: 0
   turnSpeed: 0
   turnDriftSpeed: 0

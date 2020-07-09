@@ -2,12 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TopDownCamera : MonoBehaviour
+public class TopDownCamera : Singleton<TopDownCamera>
 {
-    private static TopDownCamera instance;
-    public static TopDownCamera Instance
-    { get { if (instance == null) instance = GameObject.FindObjectOfType<TopDownCamera>(); return instance; } }
-
     public Transform curCarTf;
     public float aheadSpeed;
     public float followDamp;

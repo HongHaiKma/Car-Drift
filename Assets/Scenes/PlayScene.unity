@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 170076734}
-  m_IndirectSpecularColor: {r: 0.4366757, g: 0.48427194, b: 0.5645252, a: 1}
+  m_IndirectSpecularColor: {r: 0.43667546, g: 0.48427135, b: 0.5645225, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -700,6 +700,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   carControllerPool: []
   car: {fileID: -4323169437412791219, guid: 34d7f9cf0e9762e489724f36e678f77a, type: 3}
+  cpTf:
+  - {fileID: 750537512}
+  - {fileID: 1078149692}
+  - {fileID: 398835682}
+  - {fileID: 1554212223}
 --- !u!1 &1043515055
 GameObject:
   m_ObjectHideFlags: 0
@@ -1367,7 +1372,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1639405014}
-          m_MethodName: CLICKKKKKKKKKKK
+          m_MethodName: BeginDrift
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
@@ -1382,7 +1387,7 @@ MonoBehaviour:
       m_PersistentCalls:
         m_Calls:
         - m_Target: {fileID: 1639405014}
-          m_MethodName: CLICKKKKKKKKKKK
+          m_MethodName: StopDrift
           m_Mode: 1
           m_Arguments:
             m_ObjectArgument: {fileID: 0}
