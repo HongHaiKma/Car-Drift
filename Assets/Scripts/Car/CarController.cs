@@ -49,7 +49,6 @@ public class CarController : MonoBehaviour
     {
         CarEvent.Instance.OnDrift += OnDrift;
         CarEvent.Instance.OnStopDrift += OnStopDrift;
-        CarEvent.Instance.OnMoveForward += OnMoveForward;
         CarEvent.Instance.OnSpawnNewCar += OnSpawnNewCar;
     }
 
@@ -57,7 +56,6 @@ public class CarController : MonoBehaviour
     {
         CarEvent.Instance.OnDrift -= OnDrift;
         CarEvent.Instance.OnStopDrift -= OnStopDrift;
-        CarEvent.Instance.OnMoveForward -= OnMoveForward;
         CarEvent.Instance.OnSpawnNewCar -= OnSpawnNewCar;
     }
 
@@ -82,7 +80,7 @@ public class CarController : MonoBehaviour
         // PoolManager.Instance.ActiveNewCar();
         // yield return new WaitForSeconds(1f);
         UIManager.Instance.btn_Drift.interactable = true;
-        PoolManager.Instance.ActiveNewCar();
+        PoolManager.Instance.ActivateNewCar();
         // SetActiveGO(false);
         Debug.Log("IE spwan a new car called!!!");
     }
@@ -126,10 +124,5 @@ public class CarController : MonoBehaviour
     public void OnStopDrift()
     {
         stateMachine.ChangeState(carStateInstance.stopDriftState);
-    }
-
-    public void OnMoveForward()
-    {
-        stateMachine.ChangeState(carStateInstance.moveForward);
     }
 }

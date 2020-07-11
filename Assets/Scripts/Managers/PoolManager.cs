@@ -18,7 +18,7 @@ public class PoolManager : Singleton<PoolManager>
     {
         CreateCarPool();
 
-        ActiveNewCar();
+        ActivateNewCar();
     }
 
     public void CreateCarPool()
@@ -33,7 +33,7 @@ public class PoolManager : Singleton<PoolManager>
         }
     }
 
-    public void ActiveNewCar()
+    public void ActivateNewCar()
     {
         GameManager.Instance.gameStart = true;
 
@@ -42,6 +42,7 @@ public class PoolManager : Singleton<PoolManager>
             if (!carControllerPool[i].IsActive())
             {
                 carControllerPool[i].SetActiveGO(true);
+                carControllerPool[i].carMotion.tf.position = new Vector3(0f, 0f, 0f);
                 TopDownCamera.Instance.curCarTf = carControllerPool[i].carMotion.tf;
                 TopDownCamera.Instance.curCarRb = carControllerPool[i].carMotion.rb;
                 // CarEvent.Instance.MoveForward();
@@ -110,6 +111,6 @@ public class PoolManager : Singleton<PoolManager>
     {
         GameManager.Instance.gameStart = true;
         DeactiveCar();
-        ActiveNewCar();
+        ActivateNewCar();
     }
 }

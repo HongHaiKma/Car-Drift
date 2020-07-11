@@ -22,7 +22,7 @@ public class TurnButton : MonoBehaviour
         if (GameManager.Instance.gameStart)
         {
             // CarEvent.Instance.SpawnNewCar();
-            PoolManager.Instance.ActiveNewCar();
+            PoolManager.Instance.ActivateNewCar();
         }
     }
 }
