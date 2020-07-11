@@ -10,6 +10,7 @@ public class TurnButton : MonoBehaviour
     public void BeginDrift()
     {
         CarEvent.Instance.Drift();
+        Debug.Log("On click button begin drift!!!");
     }
 
     public void StopDrift()

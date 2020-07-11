@@ -12,7 +12,6 @@ public class CarMotion : MonoBehaviour
     [Header("Drift parameter")]
     public CarState carState;
     public bool driftLeft;
-    public bool drifting = false;
 
     public float turnAngle;
     public float turnSpeed;
@@ -67,14 +66,13 @@ public class CarMotion : MonoBehaviour
 
     public void SetupNewCarStatus()
     {
-        drifting = false;
-
         turnAngle = 0f;
-        turnSpeed = 300f;
+        turnSpeed = 350f;
 
         speed = 70f;
-        turnDriftSpeed = 90f;
-        forwardDriftSpeed = 120f;
+
+        turnDriftSpeed = 150f;
+        forwardDriftSpeed = 70f;
 
         tf.position = new Vector3(0f, 0f, 0f);
         tf.rotation = Quaternion.Euler(0f, 0f, 0f);
@@ -100,7 +98,6 @@ public class CarMotion : MonoBehaviour
         carState = CarState.Drifting;
 
         driftLeft = PoolManager.Instance.PickNearestTarget(tf.position);
-
         //Choose drift direction
     }
 
@@ -123,10 +120,10 @@ public class CarMotion : MonoBehaviour
 
     public void DriftLeft()
     {
-        drifting = true;
-
         rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
         rb.AddRelativeForce(Vector3.left * turnDriftSpeed);
+
+        // rb.Add
 
         turnAngle -= turnSpeed * Time.fixedDeltaTime;
         rb.rotation = Quaternion.Euler(0, turnAngle, 0);
@@ -136,8 +133,6 @@ public class CarMotion : MonoBehaviour
 
     public void DriftRight()
     {
-        drifting = true;
-
         rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
         rb.AddRelativeForce(Vector3.right * turnDriftSpeed);
 

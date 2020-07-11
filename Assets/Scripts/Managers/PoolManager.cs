@@ -11,6 +11,9 @@ public class PoolManager : Singleton<PoolManager>
     [Header("Checkpoint")]
     public List<Transform> cpTf;
 
+    [Header("Checkpoint")]
+    public int maxCar;
+
     void Awake()
     {
         CreateCarPool();
@@ -20,7 +23,9 @@ public class PoolManager : Singleton<PoolManager>
 
     public void CreateCarPool()
     {
-        for (int i = 0; i < 10; i++)
+        maxCar = 12;
+
+        for (int i = 0; i < maxCar; i++)
         {
             carControllerPool.Add(Instantiate(car));
             // CarEvent.Instance.StopDrift();
@@ -77,10 +82,16 @@ public class PoolManager : Singleton<PoolManager>
 
         if (cpTf[nearestIdx].position.x < carPos.x)
         {
+            Debug.Log("Nearest index: " + nearestIdx);
+            Debug.Log("Check point: " + cpTf[nearestIdx].position.x);
+            Debug.Log("Car: " + carPos.x);
             return true;
         }
         else
         {
+            Debug.Log("Nearest index: " + nearestIdx);
+            Debug.Log("Check point: " + cpTf[nearestIdx].position.x);
+            Debug.Log("Car: " + carPos.x);
             return false;
         }
     }

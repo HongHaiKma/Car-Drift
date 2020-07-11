@@ -61,32 +61,6 @@ public class CarController : MonoBehaviour
         CarEvent.Instance.OnSpawnNewCar -= OnSpawnNewCar;
     }
 
-    public void Update()
-    {
-        // if (Input.GetKeyUp("a"))
-        // {
-        //     carMotion.StopMotion();
-
-        //     if (GameManager.Instance.gameStart)
-        //     {
-        //         StartCoroutine(CreateNewCar());
-        //     }
-        // }
-        // else if (Input.GetKeyUp("d"))
-        // {
-        //     carMotion.StopMotion();
-
-        //     if (GameManager.Instance.gameStart)
-        //     {
-        //         StartCoroutine(CreateNewCar());
-        //     }
-        // }
-
-        // carMotion.SetSideSlip();
-
-
-    }
-
     public void FixedUpdate()
     {
         stateMachine.ExecuteStateUpdate();
@@ -143,8 +117,10 @@ public class CarController : MonoBehaviour
 
     public void OnDrift()
     {
-        stateMachine.ChangeState(carStateInstance.driftState);
-
+        if (IsActive() && carMotion.carState != CarState.StopDrifting)
+        {
+            stateMachine.ChangeState(carStateInstance.driftState);
+        }
     }
 
     public void OnStopDrift()
