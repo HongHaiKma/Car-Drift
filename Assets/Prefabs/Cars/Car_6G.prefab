@@ -229,6 +229,7 @@ MonoBehaviour:
   rb: {fileID: -8633358810184036363}
   carController: {fileID: -4323169437412791219}
   carCollision: {fileID: -2737860289413725765}
+  collider: {fileID: -4919217956708192858}
   carState: 0
   driftLeft: 0
   turnAngle: 0

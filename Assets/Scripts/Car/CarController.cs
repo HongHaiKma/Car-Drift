@@ -118,7 +118,7 @@ public class CarController : MonoBehaviour
 
     public void OnDrift()
     {
-        if (IsActive() && !carMotion.CompareState(CarState.Drifting))
+        if (IsActive() && carMotion.CompareState(CarState.MoveForward))
         {
             stateMachine.ChangeState(carStateInstance.driftState);
         }
@@ -126,7 +126,7 @@ public class CarController : MonoBehaviour
 
     public void OnStopDrift()
     {
-        if (IsActive() && !carMotion.CompareState(CarState.StopDrifting))
+        if (IsActive() && carMotion.CompareState(CarState.Drifting))
         {
             stateMachine.ChangeState(carStateInstance.stopDriftState);
         }

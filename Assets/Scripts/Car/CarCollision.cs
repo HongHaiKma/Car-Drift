@@ -38,26 +38,29 @@ public class CarCollision : MonoBehaviour
 
     void OnTriggerEnter(Collider col)
     {
-        Debug.Log("Trigger enter!!!");
-
-        Debug.Log(col.name);
-
-        if (carMotion.CompareState(CarState.StopDrifting))
+        if (col.GetComponents<ParkingPoint>() != null)
         {
-            // Debug.Log(col.name);
+            //Calculate percentage of collision --->>> Last
+            //if percentage < x => lose
+            //if percentage >= x => continue
 
-            if (col.GetComponents<ParkingPoint>() != null)
-            {
-                //Calculate percentage of collision --->>> Last
-                //if percentage < x => lose
-                //if percentage >= x => continue
+            // GameManager.Instance.gameStart = true;
+            parked = true;
+            Debug.Log("Check point!!!");
+        }
+    }
 
-                // GameManager.Instance.gameStart = true;
-                parked = true;
-                Debug.Log("Check point!!!");
-            }
+    void OnTriggerExit(Collider col)
+    {
+        if (col.GetComponents<ParkingPoint>() != null)
+        {
+            //Calculate percentage of collision --->>> Last
+            //if percentage < x => lose
+            //if percentage >= x => continue
 
-            // CheckParking();
+            // GameManager.Instance.gameStart = true;
+            parked = false;
+            Debug.Log("Check point!!!");
         }
     }
 }

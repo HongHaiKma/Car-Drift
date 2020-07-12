@@ -9,6 +9,7 @@ public class CarMotion : MonoBehaviour
     public Rigidbody rb;
     public CarController carController;
     public CarCollision carCollision;
+    public Collider collider;
 
     [Header("Drift parameter")]
     public CarState carState;
@@ -39,6 +40,7 @@ public class CarMotion : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         carController = GetComponent<CarController>();
         carCollision = GetComponent<CarCollision>();
+        collider = GetComponent<Collider>();
     }
 
     void OnEnable()
@@ -68,6 +70,8 @@ public class CarMotion : MonoBehaviour
 
     public void SetupNewCarStatus()
     {
+        // collider.enabled = false;
+
         turnAngle = 0f;
         turnSpeed = 350f;
 
@@ -168,17 +172,22 @@ public class CarMotion : MonoBehaviour
     {
         Debug.Log("On stop drift enter!!!");
         carState = CarState.StopDrifting;
+        // collider.enabled = true;
         StopMotion();
 
         if (IsActive())
         {
             carCollision.CheckParking();
         }
+
+        carController.StopListenToEvent();
+
+        // carController.StopListenToEvent();
     }
 
     public void OnStopDriftExecute()
     {
-
+        // carController.stateMachine.ChangeState(carController.carStateInstance.idleState);
     }
 
     public void OnStopDriftExit()

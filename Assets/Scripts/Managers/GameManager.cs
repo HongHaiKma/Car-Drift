@@ -23,6 +23,7 @@ public class GameManager : Singleton<GameManager>
         gameStart = false;
         UIManager.Instance.OpenStartGamePopup();
         UIManager.Instance.startPopup.SetActive(true);
+        PoolManager.Instance.DeactiveCar();
         Debug.Log("Stop game!!!");
     }
 

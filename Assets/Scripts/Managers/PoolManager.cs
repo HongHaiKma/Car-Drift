@@ -104,7 +104,7 @@ public class PoolManager : Singleton<PoolManager>
     {
         GameManager.Instance.gameStart = true;
         DeactiveCar();
-        ActivateNewCar();
+        // ActivateNewCar();
     }
 
     public void ClickTest()
