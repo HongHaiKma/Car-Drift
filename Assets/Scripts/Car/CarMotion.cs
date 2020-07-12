@@ -9,7 +9,6 @@ public class CarMotion : MonoBehaviour
     public Rigidbody rb;
     public CarController carController;
     public CarCollision carCollision;
-    public Collider collider;
 
     [Header("Drift parameter")]
     public CarState carState;
@@ -20,6 +19,7 @@ public class CarMotion : MonoBehaviour
     public float turnDriftSpeed;
     public float forwardDriftSpeed;
     public float speed;
+    public Speed spdType;
 
     [Header("Slip")]
     Vector3 lastPosition;
@@ -34,24 +34,19 @@ public class CarMotion : MonoBehaviour
         CacheComponents();
     }
 
+    private void OnDisable()
+    {
+        // CancelInvoke("SetDeactiveCar");
+        // CancelInvoke();
+        Debug.Log("OnDisabled called!!!");
+    }
+
     public void CacheComponents()
     {
         tf = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         carController = GetComponent<CarController>();
         carCollision = GetComponent<CarCollision>();
-        collider = GetComponent<Collider>();
-    }
-
-    void OnEnable()
-    {
-        // SetupNewCarStatus();
-        // StartListenToEvent();
-    }
-
-    void OnDisable()
-    {
-        // StopListenToEvent();
     }
 
     public void MoveForward()
@@ -75,7 +70,7 @@ public class CarMotion : MonoBehaviour
         turnAngle = 0f;
         turnSpeed = 350f;
 
-        speed = 70f;
+        speed = 100f;
 
         turnDriftSpeed = 150f;
         forwardDriftSpeed = 70f;
@@ -134,8 +129,6 @@ public class CarMotion : MonoBehaviour
         rb.AddRelativeForce(Vector3.forward * forwardDriftSpeed);
         rb.AddRelativeForce(Vector3.left * turnDriftSpeed);
 
-        // rb.Add
-
         turnAngle -= turnSpeed * Time.fixedDeltaTime;
         rb.rotation = Quaternion.Euler(0, turnAngle, 0);
 
@@ -172,7 +165,6 @@ public class CarMotion : MonoBehaviour
     {
         Debug.Log("On stop drift enter!!!");
         carState = CarState.StopDrifting;
-        // collider.enabled = true;
         StopMotion();
 
         if (IsActive())
@@ -180,14 +172,22 @@ public class CarMotion : MonoBehaviour
             carCollision.CheckParking();
         }
 
-        carController.StopListenToEvent();
+        // Invoke("SetDeactiveCar", 1.5f);
+    }
 
-        // carController.StopListenToEvent();
+    public void SetDeactiveCar()
+    {
+        SetActiveGO(false);
+    }
+
+    public void SetActiveGO(bool status)
+    {
+        gameObject.SetActive(status);
     }
 
     public void OnStopDriftExecute()
     {
-        // carController.stateMachine.ChangeState(carController.carStateInstance.idleState);
+
     }
 
     public void OnStopDriftExit()

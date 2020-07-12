@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-public class CarStateInstance
+﻿public class CarStateInstance
 {
     public IState moveForward;
     public IState driftState;

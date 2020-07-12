@@ -20,4 +20,7 @@ public class CarEvent : Singleton<CarEvent>
 
     public event Action OnTest;
     public void Test() { if (OnTest != null) OnTest(); }
+
+    public event Action<bool> OnDisabled;
+    public void Disabled(bool status) { if (OnDisabled != null) OnDisabled.Invoke(status); }
 }

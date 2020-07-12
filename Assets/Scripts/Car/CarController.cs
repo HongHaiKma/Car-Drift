@@ -9,7 +9,6 @@ public class CarController : MonoBehaviour
 
     [Header("Components")]
     public CarMotion carMotion;
-    public Quaternion targetRotation;
 
     [Header("State")]
     public StateMachine stateMachine;
@@ -30,7 +29,6 @@ public class CarController : MonoBehaviour
     {
         carMotion.SetupNewCarStatus();
         StartListenToEvent();
-        // stateMachine.ChangeState(carStateInstance.moveForward);
     }
 
     void OnDisable()
@@ -43,7 +41,6 @@ public class CarController : MonoBehaviour
         carStateInstance = new CarStateInstance();
         stateMachine = new StateMachine(this.carMotion);
         stateMachine.Init(carStateInstance.idleState);
-        // stateMachine.Init(carStateInstance.moveForward);
     }
 
     public void StartListenToEvent()
@@ -51,7 +48,7 @@ public class CarController : MonoBehaviour
         CarEvent.Instance.OnDrift += OnDrift;
         CarEvent.Instance.OnStopDrift += OnStopDrift;
         CarEvent.Instance.OnSpawnNewCar += OnSpawnNewCar;
-        CarEvent.Instance.OnTest += Test;
+        CarEvent.Instance.OnDisabled += SetActiveGO;
     }
 
     public void StopListenToEvent()
@@ -59,7 +56,7 @@ public class CarController : MonoBehaviour
         CarEvent.Instance.OnDrift -= OnDrift;
         CarEvent.Instance.OnStopDrift -= OnStopDrift;
         CarEvent.Instance.OnSpawnNewCar -= OnSpawnNewCar;
-        CarEvent.Instance.OnTest += Test;
+        CarEvent.Instance.OnDisabled -= SetActiveGO;
     }
 
     public void FixedUpdate()
@@ -67,9 +64,11 @@ public class CarController : MonoBehaviour
         stateMachine.ExecuteStateUpdate();
     }
 
-    public void Drift()
+    public void SetCarSpawn()
     {
-
+        SetActiveGO(true);
+        carMotion.tf.position = new Vector3(0f, 0f, 0f);
+        stateMachine.ChangeState(carStateInstance.moveForward);
     }
 
     public void OnSpawnNewCar()
@@ -97,22 +96,6 @@ public class CarController : MonoBehaviour
     {
         return gameObject.activeInHierarchy;
     }
-
-    // public void SetRotationPoint()
-    // {
-    //     Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
-    //     Plane plane = new Plane(Vector3.up, Vector3.zero);
-    //     float distance;
-
-    //     if (plane.Raycast(ray, out distance))
-    //     {
-    //         Vector3 target = ray.GetPoint(distance);
-    //         Vector3 direction = target - tf.position;
-
-    //         float rotationAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
-    //         targetRotation = Quaternion.Euler(0, rotationAngle, 0);
-    //     }
-    // }
 
     //-------------------------------------EVENTS-------------------------------------------
 

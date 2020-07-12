@@ -597,7 +597,6 @@ MonoBehaviour:
   aheadSpeed: 1
   followDamp: 0
   cameraHeight: 40.25
-  curCarRb: {fileID: 0}
   tf: {fileID: 0}
 --- !u!54 &534669907
 Rigidbody:

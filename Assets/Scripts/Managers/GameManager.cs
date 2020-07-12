@@ -27,7 +27,7 @@ public class GameManager : Singleton<GameManager>
         Debug.Log("Stop game!!!");
     }
 
-    public void StopGame1()
+    public void PauseGame()
     {
         if (Time.timeScale == 1)
         {

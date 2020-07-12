@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 public class PoolManager : Singleton<PoolManager>
 {
@@ -26,7 +27,6 @@ public class PoolManager : Singleton<PoolManager>
         for (int i = 0; i < maxCar; i++)
         {
             carControllerPool.Add(Instantiate(car));
-            // CarEvent.Instance.StopDrift();
             carControllerPool[i].SetActiveGO(false);
         }
     }
@@ -35,16 +35,19 @@ public class PoolManager : Singleton<PoolManager>
     {
         GameManager.Instance.gameStart = true;
 
+        // GameObject[] a = new GameObject[2];
+
+        if (carControllerPool.All(obj => obj.IsActive() == true))
+        {
+            CarEvent.Instance.Disabled(false);
+        }
+
         for (int i = 0; i < carControllerPool.Count; i++)
         {
             if (!carControllerPool[i].IsActive())
             {
-                carControllerPool[i].SetActiveGO(true);
-                carControllerPool[i].carMotion.tf.position = new Vector3(0f, 0f, 0f);
+                carControllerPool[i].SetCarSpawn();
                 TopDownCamera.Instance.curCarTf = carControllerPool[i].carMotion.tf;
-                TopDownCamera.Instance.curCarRb = carControllerPool[i].carMotion.rb;
-                carControllerPool[i].stateMachine.ChangeState(carControllerPool[i].carStateInstance.moveForward);
-                // CarEvent.Instance.MoveForward();
                 break;
             }
         }
@@ -65,7 +68,7 @@ public class PoolManager : Singleton<PoolManager>
 
         for (int i = 0; i < cpTf.Count; i++)
         {
-            if (carPos.z < cpTf[i].position.z)
+            if (carPos.z < cpTf[i].position.z) // ===> determine before or after by z axis
             {
                 Vector2 origin = new Vector2(carPos.x, carPos.z);
                 Vector2 des = new Vector2(cpTf[i].position.x, cpTf[i].position.z);
@@ -88,6 +91,71 @@ public class PoolManager : Singleton<PoolManager>
         {
             return false;
         }
+
+        // if (cpTf[nearestIdx].position.x < carPos.x)
+        // {
+        //     if (spd == Speed.Spd1)
+        //     {
+        //         return true;
+        //     }
+        //     else if (spd == Speed.Spd2)
+        //     {
+        //         return (cpTf[nearestIdx].position.z - carPos.z) <= 10f ? false : true;
+        //     }
+        //     else if (spd == Speed.Spd3)
+        //     {
+        //         return (cpTf[nearestIdx].position.z - carPos.z) <= 14 ? false : true;
+        //     }
+        // }
+        // else if (cpTf[nearestIdx].position.x < carPos.x && spd == Speed.Spd2)
+        // {
+        //     if ((cpTf[nearestIdx].position.z - carPos.z) <= 10f)
+        //     {
+        //         return false;
+        //     }
+        //     else
+        //     {
+        //         return true;
+        //     }
+        // }
+        // else if (cpTf[nearestIdx].position.x < carPos.x && spd == Speed.Spd3)
+        // {
+        //     if ((cpTf[nearestIdx].position.z - carPos.z) <= 14f)
+        //     {
+        //         return false;
+        //     }
+        //     else
+        //     {
+        //         return true;
+        //     }
+        // }
+
+        // if (cpTf[nearestIdx].position.x >= carPos.x && spd == Speed.Spd1)
+        // {
+        //     return true;
+        // }
+        // else if (cpTf[nearestIdx].position.x >= carPos.x && spd == Speed.Spd2)
+        // {
+        //     if ((cpTf[nearestIdx].position.z - carPos.z) <= 10f)
+        //     {
+        //         return false;
+        //     }
+        //     else
+        //     {
+        //         return true;
+        //     }
+        // }
+        // else if (cpTf[nearestIdx].position.x >= carPos.x && spd == Speed.Spd3)
+        // {
+        //     if ((cpTf[nearestIdx].position.z - carPos.z) <= 14f)
+        //     {
+        //         return false;
+        //     }
+        //     else
+        //     {
+        //         return true;
+        //     }
+        // }
     }
 
     public float CalculateDistance(Vector2 origin, Vector2 des)

@@ -8,8 +8,6 @@ public class TopDownCamera : Singleton<TopDownCamera>
     public float aheadSpeed;
     public float followDamp;
     public float cameraHeight;
-
-    public Rigidbody curCarRb;
     public Transform tf;
 
     void Awake()
