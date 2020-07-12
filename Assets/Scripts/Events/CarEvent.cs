@@ -17,4 +17,7 @@ public class CarEvent : Singleton<CarEvent>
 
     public event Action OnSpawnNewCar;
     public void SpawnNewCar() { if (OnSpawnNewCar != null) OnSpawnNewCar(); }
+
+    public event Action OnTest;
+    public void Test() { if (OnTest != null) OnTest(); }
 }

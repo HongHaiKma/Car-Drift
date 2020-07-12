@@ -7,8 +7,22 @@ public class UIManager : Singleton<UIManager>
 {
     public Button btn_Drift;
 
-    // private void Awake()
-    // {
-    //     btn    
-    // }
+    public GameObject startPopup;
+
+    private void Awake()
+    {
+
+    }
+
+    public void OpenStartGamePopup()
+    {
+        btn_Drift.interactable = false;
+        startPopup.SetActive(true);
+    }
+
+    public void CloseStartGamePopup()
+    {
+        btn_Drift.interactable = true;
+        startPopup.SetActive(false);
+    }
 }

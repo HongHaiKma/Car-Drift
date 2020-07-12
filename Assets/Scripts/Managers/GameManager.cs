@@ -6,12 +6,27 @@ public class GameManager : Singleton<GameManager>
 {
     public bool gameStart = false;
 
-    public void Continue()
+    private void Awake()
+    {
+        gameStart = false;
+    }
+
+    public void StartGame()
     {
         gameStart = true;
+        UIManager.Instance.CloseStartGamePopup();
+        PoolManager.Instance.ActivateNewCar();
     }
 
     public void StopGame()
+    {
+        gameStart = false;
+        UIManager.Instance.OpenStartGamePopup();
+        UIManager.Instance.startPopup.SetActive(true);
+        Debug.Log("Stop game!!!");
+    }
+
+    public void StopGame1()
     {
         if (Time.timeScale == 1)
         {

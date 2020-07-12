@@ -19,10 +19,10 @@ public class TurnButton : MonoBehaviour
         UIManager.Instance.btn_Drift.interactable = false;
         CarEvent.Instance.StopDrift();
 
-        if (GameManager.Instance.gameStart)
-        {
-            // CarEvent.Instance.SpawnNewCar();
-            PoolManager.Instance.ActivateNewCar();
-        }
+        // if (GameManager.Instance.gameStart)
+        // {
+        //     // CarEvent.Instance.SpawnNewCar();
+        //     PoolManager.Instance.ActivateNewCar();
+        // }
     }
 }

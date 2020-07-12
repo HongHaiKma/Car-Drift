@@ -22,7 +22,6 @@ public class TopDownCamera : Singleton<TopDownCamera>
     {
         if (curCarTf == null)
         {
-            Debug.Log("null");
             return;
         }
 

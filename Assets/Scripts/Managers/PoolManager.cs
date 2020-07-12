@@ -17,8 +17,6 @@ public class PoolManager : Singleton<PoolManager>
     void Awake()
     {
         CreateCarPool();
-
-        ActivateNewCar();
     }
 
     public void CreateCarPool()
@@ -45,6 +43,7 @@ public class PoolManager : Singleton<PoolManager>
                 carControllerPool[i].carMotion.tf.position = new Vector3(0f, 0f, 0f);
                 TopDownCamera.Instance.curCarTf = carControllerPool[i].carMotion.tf;
                 TopDownCamera.Instance.curCarRb = carControllerPool[i].carMotion.rb;
+                carControllerPool[i].stateMachine.ChangeState(carControllerPool[i].carStateInstance.moveForward);
                 // CarEvent.Instance.MoveForward();
                 break;
             }
@@ -83,16 +82,10 @@ public class PoolManager : Singleton<PoolManager>
 
         if (cpTf[nearestIdx].position.x < carPos.x)
         {
-            Debug.Log("Nearest index: " + nearestIdx);
-            Debug.Log("Check point: " + cpTf[nearestIdx].position.x);
-            Debug.Log("Car: " + carPos.x);
             return true;
         }
         else
         {
-            Debug.Log("Nearest index: " + nearestIdx);
-            Debug.Log("Check point: " + cpTf[nearestIdx].position.x);
-            Debug.Log("Car: " + carPos.x);
             return false;
         }
     }
@@ -112,5 +105,10 @@ public class PoolManager : Singleton<PoolManager>
         GameManager.Instance.gameStart = true;
         DeactiveCar();
         ActivateNewCar();
+    }
+
+    public void ClickTest()
+    {
+        CarEvent.Instance.Test();
     }
 }

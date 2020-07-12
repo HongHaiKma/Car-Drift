@@ -8,6 +8,7 @@ public class CarMotion : MonoBehaviour
     public Transform tf;
     public Rigidbody rb;
     public CarController carController;
+    public CarCollision carCollision;
 
     [Header("Drift parameter")]
     public CarState carState;
@@ -37,6 +38,7 @@ public class CarMotion : MonoBehaviour
         tf = GetComponent<Transform>();
         rb = GetComponent<Rigidbody>();
         carController = GetComponent<CarController>();
+        carCollision = GetComponent<CarCollision>();
     }
 
     void OnEnable()
@@ -93,6 +95,11 @@ public class CarMotion : MonoBehaviour
     }
 
     //-------------------------------------STATES-------------------------------------------
+    public bool CompareState(CarState state)
+    {
+        return carState == state ? true : false;
+    }
+
     public void OnDriftEnter()
     {
         carState = CarState.Drifting;
@@ -159,8 +166,14 @@ public class CarMotion : MonoBehaviour
 
     public void OnStopDriftEnter()
     {
+        Debug.Log("On stop drift enter!!!");
         carState = CarState.StopDrifting;
         StopMotion();
+
+        if (IsActive())
+        {
+            carCollision.CheckParking();
+        }
     }
 
     public void OnStopDriftExecute()
@@ -169,6 +182,22 @@ public class CarMotion : MonoBehaviour
     }
 
     public void OnStopDriftExit()
+    {
+
+    }
+
+    public void OnIdleEnter()
+    {
+        carState = CarState.Idle;
+        StopMotion();
+    }
+
+    public void OnIdleExecute()
+    {
+
+    }
+
+    public void OnIdleExit()
     {
 
     }

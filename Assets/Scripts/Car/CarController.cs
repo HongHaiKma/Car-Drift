@@ -2,10 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum CarState { MoveForward, Drifting, StopDrifting };
-
 public class CarController : MonoBehaviour
 {
+    [Header("General")]
+    public CollideObject collideObject;
+
     [Header("Components")]
     public CarMotion carMotion;
     public Quaternion targetRotation;
@@ -29,7 +30,7 @@ public class CarController : MonoBehaviour
     {
         carMotion.SetupNewCarStatus();
         StartListenToEvent();
-        stateMachine.ChangeState(carStateInstance.moveForward);
+        // stateMachine.ChangeState(carStateInstance.moveForward);
     }
 
     void OnDisable()
@@ -41,7 +42,7 @@ public class CarController : MonoBehaviour
     {
         carStateInstance = new CarStateInstance();
         stateMachine = new StateMachine(this.carMotion);
-        stateMachine.Init(carStateInstance.stopDriftState);
+        stateMachine.Init(carStateInstance.idleState);
         // stateMachine.Init(carStateInstance.moveForward);
     }
 
@@ -50,6 +51,7 @@ public class CarController : MonoBehaviour
         CarEvent.Instance.OnDrift += OnDrift;
         CarEvent.Instance.OnStopDrift += OnStopDrift;
         CarEvent.Instance.OnSpawnNewCar += OnSpawnNewCar;
+        CarEvent.Instance.OnTest += Test;
     }
 
     public void StopListenToEvent()
@@ -57,6 +59,7 @@ public class CarController : MonoBehaviour
         CarEvent.Instance.OnDrift -= OnDrift;
         CarEvent.Instance.OnStopDrift -= OnStopDrift;
         CarEvent.Instance.OnSpawnNewCar -= OnSpawnNewCar;
+        CarEvent.Instance.OnTest += Test;
     }
 
     public void FixedUpdate()
@@ -115,7 +118,7 @@ public class CarController : MonoBehaviour
 
     public void OnDrift()
     {
-        if (IsActive() && carMotion.carState != CarState.StopDrifting)
+        if (IsActive() && !carMotion.CompareState(CarState.Drifting))
         {
             stateMachine.ChangeState(carStateInstance.driftState);
         }
@@ -123,6 +126,14 @@ public class CarController : MonoBehaviour
 
     public void OnStopDrift()
     {
-        stateMachine.ChangeState(carStateInstance.stopDriftState);
+        if (IsActive() && !carMotion.CompareState(CarState.StopDrifting))
+        {
+            stateMachine.ChangeState(carStateInstance.stopDriftState);
+        }
+    }
+
+    public void Test()
+    {
+        Debug.Log("Testtttt!!");
     }
 }
