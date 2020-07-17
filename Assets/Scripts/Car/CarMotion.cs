@@ -70,7 +70,7 @@ public class CarMotion : MonoBehaviour
         turnAngle = 0f;
         turnSpeed = 350f;
 
-        speed = 100f;
+        speed = 70f;
 
         turnDriftSpeed = 150f;
         forwardDriftSpeed = 70f;
